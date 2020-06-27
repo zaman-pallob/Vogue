@@ -1,3 +1,5 @@
+import 'package:Vogue/Home/HomeSlider.dart';
+import 'package:Vogue/Home/HorizontalList.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -34,6 +36,16 @@ class _HomeState extends State<Home> {
           drawerOptions("About", Icons.info),
         ],
       )),
+      body: ListView(
+        children: <Widget>[
+          HomeSlider(),
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: Text("Categories"),
+          ),
+          HorizontalList(),
+        ],
+      ),
     );
   }
 
