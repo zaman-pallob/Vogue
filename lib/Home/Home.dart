@@ -27,11 +27,12 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           drawerHeader("Atikur Zaman Pallob", "atikurzamanpallob@gmail.com",
               Icons.account_circle),
-          drawerOptions("Settings", Icons.settings),
+          drawerOptions("Homepage", Icons.home),
+          drawerOptions("MyAccount", Icons.account_box),
           drawerOptions("Dashboard", Icons.dashboard),
-          drawerOptions("Recent", Icons.bubble_chart),
-          drawerOptions("Total", Icons.equalizer),
-          drawerOptions("Settings", Icons.settings),
+          drawerOptions("Myorders", Icons.shopping_basket),
+          drawerOptions("Categories", Icons.category),
+          drawerOptions("Favourites", Icons.favorite),
           drawerOptions("Settings", Icons.settings),
           drawerOptions("About", Icons.info),
         ],
@@ -41,7 +42,10 @@ class _HomeState extends State<Home> {
           HomeSlider(),
           Padding(
             padding: EdgeInsets.all(5),
-            child: Text("Categories"),
+            child: Text(
+              "Categories",
+              style: TextStyle(color: Colors.red),
+            ),
           ),
           HorizontalList(),
         ],
@@ -51,6 +55,9 @@ class _HomeState extends State<Home> {
 
   Widget drawerHeader(String name, String email, IconData icons) {
     return UserAccountsDrawerHeader(
+      decoration: BoxDecoration(
+        color: Colors.orangeAccent,
+      ),
       accountName: Text(name),
       accountEmail: Text(email),
       currentAccountPicture: new CircleAvatar(
