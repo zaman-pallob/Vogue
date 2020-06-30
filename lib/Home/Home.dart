@@ -1,4 +1,5 @@
 import 'package:Vogue/Home/HomeSlider.dart';
+import 'package:Vogue/Home/Homegridview.dart';
 import 'package:Vogue/Home/HorizontalList.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +12,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: false,
       appBar: AppBar(
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.orangeAccent,
         title: Text("Vogue"),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search), onPressed: () {}),
@@ -39,15 +41,26 @@ class _HomeState extends State<Home> {
       )),
       body: ListView(
         children: <Widget>[
-          HomeSlider(),
-          Padding(
-            padding: EdgeInsets.all(5),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.3,
+            child: HomeSlider(),
+          ),
+          Container(
+            padding: EdgeInsets.all(2),
             child: Text(
               "Categories",
               style: TextStyle(color: Colors.red),
             ),
           ),
-          HorizontalList(),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+            child: HorizontalList(),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.4,
+            child: Homegridview(),
+          )
         ],
       ),
     );
@@ -55,9 +68,7 @@ class _HomeState extends State<Home> {
 
   Widget drawerHeader(String name, String email, IconData icons) {
     return UserAccountsDrawerHeader(
-      decoration: BoxDecoration(
-        color: Colors.orangeAccent,
-      ),
+      decoration: BoxDecoration(color: Colors.orangeAccent),
       accountName: Text(name),
       accountEmail: Text(email),
       currentAccountPicture: new CircleAvatar(

@@ -3,23 +3,19 @@ import 'package:flutter/material.dart';
 class HorizontalList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 80,
-      width: MediaQuery.of(context).size.width,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          itemBlock("Blazers", AssetImage('Options/blazer.png')),
-          itemBlock("Coat", AssetImage('Options/coat.png')),
-          itemBlock("Shirt", AssetImage('Options/shirt.png')),
-          itemBlock("Tshirt", AssetImage('Options/tshirt.png')),
-          itemBlock("Trouser", AssetImage('Options/trousers.png')),
-          itemBlock("Vest", AssetImage('Options/vest.png')),
-          itemBlock("Gown", AssetImage('Options/gown.png')),
-          itemBlock("Skirt", AssetImage('Options/skirt.png')),
-          itemBlock("Lingeries", AssetImage('Options/bikini.png')),
-        ],
-      ),
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      children: <Widget>[
+        itemBlock("Blazers", AssetImage('Options/blazer.png')),
+        itemBlock("Coat", AssetImage('Options/coat.png')),
+        itemBlock("Shirt", AssetImage('Options/shirt.png')),
+        itemBlock("Tshirt", AssetImage('Options/tshirt.png')),
+        itemBlock("Trouser", AssetImage('Options/trousers.png')),
+        itemBlock("Vest", AssetImage('Options/vest.png')),
+        itemBlock("Gown", AssetImage('Options/gown.png')),
+        itemBlock("Skirt", AssetImage('Options/skirt.png')),
+        itemBlock("Lingeries", AssetImage('Options/bikini.png')),
+      ],
     );
   }
 
