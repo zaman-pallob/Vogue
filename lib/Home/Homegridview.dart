@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'package:Vogue/Product/ProductDetails.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class Homegridview extends StatefulWidget {
   @override
@@ -6,38 +10,34 @@ class Homegridview extends StatefulWidget {
 }
 
 class _HomegridviewState extends State<Homegridview> {
-  List item = [
-    {
-      'name': 'Blazer-101',
-      'price': '800\$',
-      'discount': '10 %',
-      'dp': 'products/p1.jpg'
-    },
-    {
-      'name': 'Casual Shirt',
-      'price': '300\$',
-      'discount': '4 %',
-      'dp': 'products/p2.jpeg'
-    },
-    {
-      'name': 'Blue Hill',
-      'price': '200\$',
-      'discount': '0 %',
-      'dp': 'products/p3.jpg'
-    },
-    {
-      'name': 'Blazers-23',
-      'price': '700\$',
-      'discount': '15 %',
-      'dp': 'products/p4.jpg'
-    },
-    {
-      'name': 'Blazer-111',
-      'price': '800\$',
-      'discount': '6 %',
-      'dp': 'products/p5.png'
-    },
+  final String url = "http://103.146.54.151:9000/items";
+  List item = [];
+  List dp = [
+    'products/p1.jpg',
+    'products/p2.jpeg',
+    'products/p4.jpg',
+    'products/p3.jpg',
+    'products/p7.jpg',
+    'products/p6.jpg',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    this.getJsonData();
+  }
+
+  Future<String> getJsonData() async {
+    var response = await http
+        .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+    print(response.body);
+    setState(() {
+      var convert = jsonDecode(response.body);
+      item = convert;
+    });
+    return "Success";
+  }
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -52,27 +52,28 @@ class _HomegridviewState extends State<Homegridview> {
 
   Widget singleBlock(int index, List item) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (context) => new ProductDetails(item[index]['name'],
+                    item[index]['price'], item[index]['quantity'], dp[index])));
+      },
       child: GridTile(
-        header: ListTile(
-          leading: Text(
-            item[index]['name'],
-            style: TextStyle(
-              color: Colors.redAccent,
+        footer: Container(
+          width: 50,
+          color: Colors.white70,
+          child: ListTile(
+            leading: Text(item[index]['name']),
+            title: Text(
+              "\u09F3" + item[index]['price'].toString(),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: Colors.redAccent),
             ),
-          ),
-          title: Text(
-            "Price:" + item[index]['price'],
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.redAccent,
-            ),
-          ),
-          subtitle: Text(
-            "Dis: " + item[index]['discount'],
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.redAccent,
+            subtitle: Text(
+              "N/A",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: Colors.green),
             ),
           ),
         ),
@@ -80,8 +81,8 @@ class _HomegridviewState extends State<Homegridview> {
           padding: EdgeInsets.all(2),
           child: Card(
             child: Image(
-              image: AssetImage(item[index]['dp']),
-              fit: BoxFit.fill,
+              image: AssetImage(dp[index]),
+              fit: BoxFit.cover,
             ),
           ),
         ),
