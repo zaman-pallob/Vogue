@@ -12,7 +12,14 @@ class Cart extends StatefulWidget {
   final List<String> prodname;
   final List<String> prodqty;
   final List<String> prodprice;
-  Cart({this.prodname, this.prodqty, this.prodprice});
+  final String username;
+  final String number;
+  Cart(
+      {this.prodname,
+      this.prodqty,
+      this.prodprice,
+      this.username,
+      this.number});
 
   @override
   _CartState createState() => _CartState();
@@ -147,7 +154,10 @@ class _CartState extends State<Cart> {
                 child: Text("Check Out"),
                 color: Colors.red,
                 onPressed: () {
+                  sendData(widget.prodname, widget.prodprice, widget.prodqty,
+                      widget.username, widget.number);
                   Navigator.pop(context);
+                  changeState();
                 })
           ],
         ));

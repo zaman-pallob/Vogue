@@ -34,6 +34,8 @@ Future<String> sendData(String name, int price, int qty) async {
 class _ProductDetailsState extends State<ProductDetails> {
   int amount = 1;
   bool isAdded = false;
+  String username;
+  String number;
   List<String> prodname = new List();
   List<String> prodprice = new List();
   List<String> prodqty = new List();
@@ -60,9 +62,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                   context,
                   new MaterialPageRoute(
                       builder: (context) => new Cart(
-                          prodname: prodname,
-                          prodqty: prodqty,
-                          prodprice: prodprice)));
+                            prodname: prodname,
+                            prodqty: prodqty,
+                            prodprice: prodprice,
+                            username: username,
+                            number: number,
+                          )));
             },
           ),
         ],
@@ -194,9 +199,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                           context,
                           new MaterialPageRoute(
                               builder: (context) => new Cart(
-                                  prodname: prodname,
-                                  prodqty: prodqty,
-                                  prodprice: prodprice)));
+                                    prodname: prodname,
+                                    prodqty: prodqty,
+                                    prodprice: prodprice,
+                                    username: username,
+                                    number: number,
+                                  )));
                     },
                   ),
                 ),
@@ -269,6 +277,8 @@ class _ProductDetailsState extends State<ProductDetails> {
     prodname = pref.getStringList(Constants.PRODUCT_NAME);
     prodqty = pref.getStringList(Constants.PRODUCT_QUANTITY);
     prodprice = pref.getStringList(Constants.PRODUCT_PRICE);
+    username = pref.getString(Constants.USER_NAME);
+    number = pref.getString(Constants.USER_NUMBER);
   }
 
   void save(String name, int price, int quantity) async {

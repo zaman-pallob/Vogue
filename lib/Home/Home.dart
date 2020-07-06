@@ -40,7 +40,9 @@ class _HomeState extends State<Home> {
                         builder: (context) => new Cart(
                             prodname: prodname,
                             prodqty: prodqty,
-                            prodprice: prodprice)));
+                            prodprice: prodprice,
+                            username: widget.username,
+                            number: widget.number)));
               }
             },
           ),
