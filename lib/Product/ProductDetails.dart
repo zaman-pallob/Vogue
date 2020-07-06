@@ -21,8 +21,6 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   int amount = 1;
   bool isAdded = false;
-  String username;
-  String number;
   List<String> prodname = new List();
   List<String> prodprice = new List();
   List<String> prodqty = new List();
@@ -52,8 +50,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                             prodname: prodname,
                             prodqty: prodqty,
                             prodprice: prodprice,
-                            username: username,
-                            number: number,
+                            username: widget.username,
+                            number: widget.number,
                           )));
             },
           ),
@@ -190,8 +188,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     prodname: prodname,
                                     prodqty: prodqty,
                                     prodprice: prodprice,
-                                    username: username,
-                                    number: number,
+                                    username: widget.username,
+                                    number: widget.number,
                                   )));
                     },
                   ),

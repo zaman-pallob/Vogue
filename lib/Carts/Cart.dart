@@ -148,7 +148,7 @@ class _CartState extends State<Cart> {
                 color: Colors.red,
                 onPressed: () {
                   sendData(widget.prodname, widget.prodprice, widget.prodqty,
-                      widget.username, "01521504116");
+                      widget.username, widget.number);
                   Navigator.pop(context);
                   changeState();
                 })
