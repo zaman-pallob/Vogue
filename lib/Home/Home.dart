@@ -1,9 +1,15 @@
+import 'package:Vogue/Carts/Cart.dart';
+import 'package:Vogue/Carts/CartItems.dart';
 import 'package:Vogue/Home/HomeSlider.dart';
 import 'package:Vogue/Home/Homegridview.dart';
 import 'package:Vogue/Home/HorizontalList.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
+  final String username, number;
+
+  Home(this.username, this.number);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -20,7 +26,14 @@ class _HomeState extends State<Home> {
           IconButton(icon: Icon(Icons.search), onPressed: () {}),
           IconButton(
             icon: Icon(Icons.shopping_cart),
-            onPressed: () {},
+            onPressed: () {
+              CartItems cartitems = new CartItems();
+
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new Cart(cartitems)));
+            },
           ),
         ],
       ),
@@ -69,8 +82,8 @@ class _HomeState extends State<Home> {
   Widget drawerHeader(String name, String email, IconData icons) {
     return UserAccountsDrawerHeader(
       decoration: BoxDecoration(color: Colors.orangeAccent),
-      accountName: Text(name),
-      accountEmail: Text(email),
+      accountName: Text(widget.username),
+      accountEmail: Text(widget.number),
       currentAccountPicture: new CircleAvatar(
         child: Icon(icons),
       ),

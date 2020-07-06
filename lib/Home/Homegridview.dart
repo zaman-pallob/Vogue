@@ -30,7 +30,7 @@ class _HomegridviewState extends State<Homegridview> {
   Future<String> getJsonData() async {
     var response = await http
         .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
-    print(response.body);
+
     setState(() {
       var convert = jsonDecode(response.body);
       item = convert;

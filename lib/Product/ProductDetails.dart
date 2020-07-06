@@ -1,10 +1,9 @@
-import 'dart:convert';
-import 'dart:js';
-
-import 'package:Vogue/Product/Items.dart';
+import 'package:Vogue/Carts/Cart.dart';
+import 'package:Vogue/Carts/CartItems.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductDetails extends StatefulWidget {
   final String name;
@@ -20,10 +19,8 @@ class ProductDetails extends StatefulWidget {
 
 Future<String> sendData(String name, int price, int qty) async {
   final String url = "http://103.146.54.151:9000/orders";
-  List<Map> cartitems = new List();
-  Items item = new Items(name, qty, price);
-  cartitems.add(item.tojsonData());
-  var information = jsonEncode({"items": cartitems});
+
+  var information = "";
   var response = await http.post(url,
       headers: {'Content-type': 'application/json'}, body: information);
   if (response.statusCode == 201) {
@@ -35,10 +32,15 @@ Future<String> sendData(String name, int price, int qty) async {
 
 class _ProductDetailsState extends State<ProductDetails> {
   int amount = 1;
-
+  bool isAdded = false;
+  List<String> prodname = new List();
+  List<String> prodprice = new List();
+  List<String> prodqty = new List();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
@@ -51,7 +53,13 @@ class _ProductDetailsState extends State<ProductDetails> {
           IconButton(icon: Icon(Icons.search), onPressed: () {}),
           IconButton(
             icon: Icon(Icons.shopping_cart),
-            onPressed: () {},
+            onPressed: () {
+              CartItems cartitems = new CartItems();
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new Cart(cartitems)));
+            },
           ),
         ],
       ),
@@ -66,12 +74,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                 color: Colors.white70,
                 child: ListTile(
                   leading: Text(widget.name),
-                  title: Expanded(
-                    child: Text(
-                      "\u09F3" + widget.price.toString(),
-                      textAlign: TextAlign.right,
-                      style: TextStyle(color: Colors.greenAccent),
-                    ),
+                  title: Text(
+                    "\u09F3" + widget.price.toString(),
+                    textAlign: TextAlign.right,
+                    style: TextStyle(color: Colors.greenAccent),
                   ),
                 ),
               ),
@@ -160,11 +166,9 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
           ),
           Container(
-            child: Expanded(
-              child: Text(
-                "Total Selected :" + '$amount'.toString(),
-                textAlign: TextAlign.center,
-              ),
+            child: Text(
+              "Total Selected :" + '$amount'.toString(),
+              textAlign: TextAlign.center,
             ),
           ),
           Container(
@@ -177,16 +181,29 @@ class _ProductDetailsState extends State<ProductDetails> {
                     child: Text("Buy Now"),
                     color: Colors.redAccent,
                     highlightColor: Colors.green,
-                    onPressed: () async {
-                      await sendData(
-                          widget.name, widget.price * amount, amount);
+                    onPressed: () {
+                      if (!isAdded) {
+                        saveSingleProduct(widget.name, widget.price, amount);
+                      }
+                      CartItems cartitems = new CartItems();
+                      Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => new Cart(cartitems)));
                     },
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.add_shopping_cart),
                   color: Colors.green,
-                  onPressed: () {},
+                  onPressed: () {
+                    if (!isAdded) {
+                      saveSingleProduct(widget.name, widget.price, amount);
+                      isAdded = true;
+                    } else {
+                      toast();
+                    }
+                  },
                 ),
               ],
             ),
@@ -228,5 +245,28 @@ class _ProductDetailsState extends State<ProductDetails> {
     setState(() {
       amount = index + 1;
     });
+  }
+
+  void saveSingleProduct(String name, int price, int qty) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    prodname = pref.getStringList("prodname");
+    prodprice = pref.getStringList("prodprice");
+    prodqty = pref.getStringList("prodqty");
+    prodname.add(name);
+    prodprice.add((qty * price).toString());
+    prodqty.add(qty.toString());
+    pref.setStringList("prodname", prodname);
+    pref.setStringList("prodqty", prodqty);
+    pref.setStringList("prodprice", prodprice);
+  }
+
+  void toast() {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(
+        "Already Added to the cart",
+        textAlign: TextAlign.center,
+      ),
+      duration: Duration(seconds: 3),
+    ));
   }
 }

@@ -1,4 +1,4 @@
-import 'package:Vogue/Home/Home.dart';
+import 'package:Vogue/Login/Login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -6,8 +6,7 @@ void main() {
 }
 
 final pages = {
-  '/home': (BuildContext context) => new Home(),
-  '/': (BuildContext context) => new Home(),
+  '/': (BuildContext context) => new Login(),
 };
 
 class Myapp extends StatelessWidget {
