@@ -55,6 +55,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
+              getData();
               Navigator.push(
                   context,
                   new MaterialPageRoute(
@@ -261,6 +262,13 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
       duration: Duration(seconds: 3),
     ));
+  }
+
+  void getData() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    prodname = pref.getStringList(Constants.PRODUCT_NAME);
+    prodqty = pref.getStringList(Constants.PRODUCT_QUANTITY);
+    prodprice = pref.getStringList(Constants.PRODUCT_PRICE);
   }
 
   void save(String name, int price, int quantity) async {

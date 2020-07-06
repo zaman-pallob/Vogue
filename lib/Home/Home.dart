@@ -22,7 +22,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    getData();
     return Scaffold(
       extendBody: false,
       appBar: AppBar(
@@ -33,13 +32,16 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
-              Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => new Cart(
-                          prodname: prodname,
-                          prodqty: prodqty,
-                          prodprice: prodprice)));
+              getData();
+              if (prodname != null) {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new Cart(
+                            prodname: prodname,
+                            prodqty: prodqty,
+                            prodprice: prodprice)));
+              }
             },
           ),
         ],

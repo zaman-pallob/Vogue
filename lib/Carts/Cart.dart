@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:Vogue/Product/Constants.dart';
 import 'package:Vogue/Product/Items.dart';
 import 'package:Vogue/Product/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Cart extends StatefulWidget {
   final List<String> prodname;
@@ -41,6 +44,7 @@ Future<String> sendData(List<String> pN, List<String> pP, List<String> pQ,
 }
 
 class _CartState extends State<Cart> {
+  int sizes;
   @override
   void initState() {
     super.initState();
@@ -59,7 +63,11 @@ class _CartState extends State<Cart> {
         title: Text("Vogue"),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search), onPressed: () {}),
-          IconButton(icon: Icon(Icons.clear_all), onPressed: () {})
+          IconButton(
+              icon: Icon(Icons.clear_all),
+              onPressed: () {
+                changeState();
+              })
         ],
       ),
       body: Container(child: singleBlock()),
@@ -69,31 +77,62 @@ class _CartState extends State<Cart> {
     );
   }
 
+  changeState() {
+    {
+      setState(() {
+        widget.prodname.clear();
+        widget.prodprice.clear();
+        widget.prodqty.clear();
+        clearAll();
+      });
+    }
+  }
+
+  changeindividualState(int index) {
+    {
+      setState(() {
+        widget.prodname.removeAt(index);
+        widget.prodprice.removeAt(index);
+        widget.prodqty.removeAt(index);
+        removeSingle(widget.prodname, widget.prodqty, widget.prodprice);
+      });
+    }
+  }
+
   Widget singleBlock() {
-    return ListView.builder(
-        itemCount: widget.prodname.length,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.all(5),
-            child: Card(
-              color: Colors.lightGreen,
-              child: ListTile(
-                leading: IconButton(
-                    icon: Icon(Icons.remove_circle_outline),
-                    color: Colors.red,
-                    onPressed: () {}),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(widget.prodname[index]),
-                    Text(widget.prodqty[index]),
-                    Text(widget.prodprice[index]),
-                  ],
+    if (widget.prodname == null) {
+      return Text(
+        "No items in cart",
+        textAlign: TextAlign.center,
+      );
+    } else {
+      return ListView.builder(
+          itemCount: widget.prodname.length,
+          itemBuilder: (context, index) {
+            return Container(
+              padding: EdgeInsets.all(5),
+              child: Card(
+                color: Colors.lightGreen,
+                child: ListTile(
+                  leading: IconButton(
+                      icon: Icon(Icons.remove_shopping_cart),
+                      color: Colors.red,
+                      onPressed: () {
+                        changeindividualState(index);
+                      }),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(widget.prodname[index]),
+                      Text(widget.prodqty[index]),
+                      Text(widget.prodprice[index]),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        });
+            );
+          });
+    }
   }
 
   Widget bottom() {
@@ -116,10 +155,29 @@ class _CartState extends State<Cart> {
 
   String totalcost() {
     int sum = 0;
-    int size = widget.prodprice.length;
-    for (int i = 0; i < size; i++) {
-      sum += int.parse(widget.prodprice[i]);
+    if (widget.prodprice == null) {
+      return "";
+    } else {
+      int size = widget.prodprice.length;
+      for (int i = 0; i < size; i++) {
+        sum += int.parse(widget.prodprice[i]);
+      }
+      return sum.toString() + " \u09F3";
     }
-    return sum.toString() + " \u09F3";
+  }
+
+  void clearAll() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.remove(Constants.PRODUCT_NAME);
+    pref.remove(Constants.PRODUCT_QUANTITY);
+    pref.remove(Constants.PRODUCT_PRICE);
+  }
+
+  void removeSingle(
+      List<String> prodnam, List<String> prodty, List<String> prodprec) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setStringList(Constants.PRODUCT_NAME, prodnam);
+    pref.setStringList(Constants.PRODUCT_QUANTITY, prodty);
+    pref.setStringList(Constants.PRODUCT_PRICE, prodprec);
   }
 }
