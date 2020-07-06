@@ -83,7 +83,8 @@ class _HomeState extends State<Home> {
           ),
           Container(
             height: MediaQuery.of(context).size.height * 0.4,
-            child: Homegridview(),
+            child:
+                Homegridview(username: widget.username, number: widget.number),
           )
         ],
       ),

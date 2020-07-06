@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class Homegridview extends StatefulWidget {
+  final String username, number;
+  Homegridview({this.username, this.number});
+
   @override
   _HomegridviewState createState() => _HomegridviewState();
 }
@@ -56,8 +59,13 @@ class _HomegridviewState extends State<Homegridview> {
         Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (context) => new ProductDetails(item[index]['name'],
-                    item[index]['price'], item[index]['quantity'], dp[index])));
+                builder: (context) => new ProductDetails(
+                    item[index]['name'],
+                    item[index]['price'],
+                    item[index]['quantity'],
+                    dp[index],
+                    widget.username,
+                    widget.number)));
       },
       child: GridTile(
         footer: Container(

@@ -39,15 +39,8 @@ Future<String> sendData(List<String> pN, List<String> pP, List<String> pQ,
 
   var response = await http.post(url,
       headers: {'Content-type': 'application/json'}, body: information);
-
-  if (response.statusCode == 201) {
-    print("Success");
-    return "success";
-  } else {
-    print("failed" + information);
-
-    return "Failed";
-  }
+  print(response.body);
+  return response.body;
 }
 
 class _CartState extends State<Cart> {
@@ -155,7 +148,7 @@ class _CartState extends State<Cart> {
                 color: Colors.red,
                 onPressed: () {
                   sendData(widget.prodname, widget.prodprice, widget.prodqty,
-                      widget.username, widget.number);
+                      widget.username, "01521504116");
                   Navigator.pop(context);
                   changeState();
                 })

@@ -1,8 +1,6 @@
 import 'package:Vogue/Carts/Cart.dart';
 import 'package:Vogue/Product/Constants.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,24 +9,13 @@ class ProductDetails extends StatefulWidget {
   final int price;
   final int quantity;
   final String dp;
+  final String username, number;
 
-  ProductDetails(this.name, this.price, this.quantity, this.dp);
+  ProductDetails(this.name, this.price, this.quantity, this.dp, this.username,
+      this.number);
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
-}
-
-Future<String> sendData(String name, int price, int qty) async {
-  final String url = "http://103.146.54.151:9000/orders";
-
-  var information = "";
-  var response = await http.post(url,
-      headers: {'Content-type': 'application/json'}, body: information);
-  if (response.statusCode == 201) {
-    return "Success";
-  } else {
-    return "Failed";
-  }
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
@@ -191,6 +178,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     color: Colors.redAccent,
                     highlightColor: Colors.green,
                     onPressed: () {
+                      getData();
                       if (!isAdded) {
                         save(widget.name, widget.price, amount);
                       }
@@ -274,11 +262,10 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   void getData() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
+
     prodname = pref.getStringList(Constants.PRODUCT_NAME);
     prodqty = pref.getStringList(Constants.PRODUCT_QUANTITY);
     prodprice = pref.getStringList(Constants.PRODUCT_PRICE);
-    username = pref.getString(Constants.USER_NAME);
-    number = pref.getString(Constants.USER_NUMBER);
   }
 
   void save(String name, int price, int quantity) async {
