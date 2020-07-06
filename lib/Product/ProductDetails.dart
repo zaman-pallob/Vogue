@@ -1,8 +1,9 @@
 import 'package:Vogue/Carts/Cart.dart';
-import 'package:Vogue/Carts/CartItems.dart';
+import 'package:Vogue/Product/Constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -54,11 +55,13 @@ class _ProductDetailsState extends State<ProductDetails> {
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
-              CartItems cartitems = new CartItems();
               Navigator.push(
                   context,
                   new MaterialPageRoute(
-                      builder: (context) => new Cart(cartitems)));
+                      builder: (context) => new Cart(
+                          prodname: prodname,
+                          prodqty: prodqty,
+                          prodprice: prodprice)));
             },
           ),
         ],
@@ -183,13 +186,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                     highlightColor: Colors.green,
                     onPressed: () {
                       if (!isAdded) {
-                        saveSingleProduct(widget.name, widget.price, amount);
+                        save(widget.name, widget.price, amount);
                       }
-                      CartItems cartitems = new CartItems();
+
                       Navigator.push(
                           context,
                           new MaterialPageRoute(
-                              builder: (context) => new Cart(cartitems)));
+                              builder: (context) => new Cart(
+                                  prodname: prodname,
+                                  prodqty: prodqty,
+                                  prodprice: prodqty)));
                     },
                   ),
                 ),
@@ -198,8 +204,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                   color: Colors.green,
                   onPressed: () {
                     if (!isAdded) {
-                      saveSingleProduct(widget.name, widget.price, amount);
                       isAdded = true;
+                      save(widget.name, widget.price, amount);
                     } else {
                       toast();
                     }
@@ -247,19 +253,6 @@ class _ProductDetailsState extends State<ProductDetails> {
     });
   }
 
-  void saveSingleProduct(String name, int price, int qty) async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    prodname = pref.getStringList("prodname");
-    prodprice = pref.getStringList("prodprice");
-    prodqty = pref.getStringList("prodqty");
-    prodname.add(name);
-    prodprice.add((qty * price).toString());
-    prodqty.add(qty.toString());
-    pref.setStringList("prodname", prodname);
-    pref.setStringList("prodqty", prodqty);
-    pref.setStringList("prodprice", prodprice);
-  }
-
   void toast() {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(
@@ -268,5 +261,23 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
       duration: Duration(seconds: 3),
     ));
+  }
+
+  void save(String name, int price, int quantity) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    prodname = pref.getStringList(Constants.PRODUCT_NAME);
+    prodqty = pref.getStringList(Constants.PRODUCT_QUANTITY);
+    prodprice = pref.getStringList(Constants.PRODUCT_PRICE);
+    if (prodname == null) {
+      prodname = new List();
+      prodprice = new List();
+      prodqty = new List();
+    }
+    prodname.add(name);
+    prodprice.add((quantity * price).toString());
+    prodqty.add(quantity.toString());
+    pref.setStringList(Constants.PRODUCT_NAME, prodname);
+    pref.setStringList(Constants.PRODUCT_QUANTITY, prodqty);
+    pref.setStringList(Constants.PRODUCT_PRICE, prodprice);
   }
 }

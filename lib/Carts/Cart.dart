@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:Vogue/Carts/CartItems.dart';
 import 'package:Vogue/Product/Items.dart';
 import 'package:Vogue/Product/Model.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +6,10 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class Cart extends StatefulWidget {
-  final CartItems cartitems;
-  Cart(this.cartitems);
+  final List<String> prodname;
+  final List<String> prodqty;
+  final List<String> prodprice;
+  Cart({this.prodname, this.prodqty, this.prodprice});
 
   @override
   _CartState createState() => _CartState();
@@ -41,15 +41,13 @@ Future<String> sendData(List<String> pN, List<String> pP, List<String> pQ,
 }
 
 class _CartState extends State<Cart> {
-  List<String> pName = new List();
-  List<String> pPrice = new List();
-  List<String> pQty = new List();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    pName = widget.cartitems.getProdname();
-    pPrice = widget.cartitems.getProdprice();
-    pQty = widget.cartitems.getProdqty();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -61,12 +59,7 @@ class _CartState extends State<Cart> {
         title: Text("Vogue"),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search), onPressed: () {}),
-          IconButton(
-              icon: Icon(Icons.clear_all),
-              onPressed: () {
-                widget.cartitems.clearAll();
-                changeText();
-              })
+          IconButton(icon: Icon(Icons.clear_all), onPressed: () {})
         ],
       ),
       body: Container(child: singleBlock()),
@@ -76,27 +69,9 @@ class _CartState extends State<Cart> {
     );
   }
 
-  changeSingle(String name, String prc, String qt) {
-    setState(() {
-      pName.remove(name);
-      pPrice.remove(prc);
-      pQty.remove(qt);
-    });
-  }
-
-  changeText() {
-    setState(() {
-      for (int i = 0; i <= pName.length; i++) {
-        pName.removeAt(i);
-        pPrice.removeAt(i);
-        pQty.removeAt(i);
-      }
-    });
-  }
-
   Widget singleBlock() {
     return ListView.builder(
-        itemCount: pName.length,
+        itemCount: widget.prodname.length,
         itemBuilder: (context, index) {
           return Container(
             padding: EdgeInsets.all(5),
@@ -106,17 +81,13 @@ class _CartState extends State<Cart> {
                 leading: IconButton(
                     icon: Icon(Icons.remove_circle_outline),
                     color: Colors.red,
-                    onPressed: () {
-                      widget.cartitems.clearSelected(
-                          pName[index], pQty[index], pPrice[index]);
-                      changeSingle(pName[index], pPrice[index], pQty[index]);
-                    }),
+                    onPressed: () {}),
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(pName[index]),
-                    Text(pQty[index]),
-                    Text(pPrice[index]),
+                    Text(widget.prodname[index]),
+                    Text(widget.prodqty[index]),
+                    Text(widget.prodprice[index]),
                   ],
                 ),
               ),
@@ -136,11 +107,8 @@ class _CartState extends State<Cart> {
             RaisedButton(
                 child: Text("Check Out"),
                 color: Colors.red,
-                onPressed: () async {
-                  await sendData(pName, pPrice, pQty, widget.cartitems.username,
-                      widget.cartitems.number);
+                onPressed: () {
                   Navigator.pop(context);
-                  widget.cartitems.clearAll();
                 })
           ],
         ));
@@ -148,10 +116,6 @@ class _CartState extends State<Cart> {
 
   String totalcost() {
     int sum = 0;
-    for (int i = 0; i < pPrice.length; i++) {
-      sum += int.parse(pPrice[i]);
-    }
-
     return sum.toString() + " \u09F3";
   }
 }

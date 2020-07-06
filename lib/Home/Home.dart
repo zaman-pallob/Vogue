@@ -1,9 +1,10 @@
 import 'package:Vogue/Carts/Cart.dart';
-import 'package:Vogue/Carts/CartItems.dart';
 import 'package:Vogue/Home/HomeSlider.dart';
 import 'package:Vogue/Home/Homegridview.dart';
 import 'package:Vogue/Home/HorizontalList.dart';
+import 'package:Vogue/Product/Constants.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   final String username, number;
@@ -15,8 +16,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<String> prodname = new List();
+  List<String> prodprice = new List();
+  List<String> prodqty = new List();
+
   @override
   Widget build(BuildContext context) {
+    getData();
     return Scaffold(
       extendBody: false,
       appBar: AppBar(
@@ -27,12 +33,13 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {
-              CartItems cartitems = new CartItems();
-
               Navigator.push(
                   context,
                   new MaterialPageRoute(
-                      builder: (context) => new Cart(cartitems)));
+                      builder: (context) => new Cart(
+                          prodname: prodname,
+                          prodqty: prodqty,
+                          prodprice: prodprice)));
             },
           ),
         ],
@@ -98,5 +105,12 @@ class _HomeState extends State<Home> {
         Navigator.pop(context);
       },
     );
+  }
+
+  void getData() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    prodname = pref.getStringList(Constants.PRODUCT_NAME);
+    prodqty = pref.getStringList(Constants.PRODUCT_QUANTITY);
+    prodprice = pref.getStringList(Constants.PRODUCT_PRICE);
   }
 }
