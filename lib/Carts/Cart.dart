@@ -19,8 +19,8 @@ Future<String> sendData(List<String> pN, List<String> pP, List<String> pQ,
     String name, String number) async {
   final String url = "http://103.146.54.151:9000/orders";
   List<Items> item = new List();
-
-  for (int i = 0; i < pN.length; i++) {
+  int size = pN.length;
+  for (int i = 0; i < size; i++) {
     item.add(new Items(
         name: pN[i], quantity: int.parse(pQ[i]), price: int.parse(pP[i])));
   }
@@ -116,6 +116,10 @@ class _CartState extends State<Cart> {
 
   String totalcost() {
     int sum = 0;
+    int size = widget.prodprice.length;
+    for (int i = 0; i < size; i++) {
+      sum += int.parse(widget.prodprice[i]);
+    }
     return sum.toString() + " \u09F3";
   }
 }

@@ -195,7 +195,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               builder: (context) => new Cart(
                                   prodname: prodname,
                                   prodqty: prodqty,
-                                  prodprice: prodqty)));
+                                  prodprice: prodprice)));
                     },
                   ),
                 ),
